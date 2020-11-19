@@ -151,26 +151,29 @@ class Note(object):
     def create_markdown_attachments(self):
         # Appends the attachment information in markdown format to self.__markdown
         if len(self._attachments) > 0:
-            self._markdown += "\n---"
-            self._markdown += "\n### ATTACHMENTS"
+##            self._markdown += "\n---"
+##            self._markdown += "\n### ATTACHMENTS"
             for i in range(len(self._attachments)):
-                self._markdown += "\n[%s]: %s%s" % (
-                    self._attachments[i].get_hash(), self.MEDIA_PATH, self._attachments[i].get_filename())
-                self._markdown += self._attachments[i].get_attributes()
+#                self._markdown += "\n[%s]: %s%s" % (
+#                    self._attachments[i].get_hash(), self.MEDIA_PATH, self._attachments[i].get_filename())
+#                self._markdown += self._attachments[i].get_attributes()
+                # we replace attachement ref by correct file link like this
+                # ![myscreenshot.png](media/073349f78.png)
+                self._markdown = self._markdown.replace( "["+self._attachments[i].get_hash()+ "]", "("+ self.MEDIA_PATH +self._attachments[i].get_filename() + ")" )
 
     def create_markdown_note_attr(self):
         self._markdown += "\n---"
-        self._markdown += "\n### NOTE ATTRIBUTES"
-        self._markdown += "\n>Created Date: " + self._created_date.strftime(self.TIME_FORMAT) + "  "
-        self._markdown += "\n>Last Evernote Update Date: " + self._updated_date.strftime(self.TIME_FORMAT) + "  "
+        self._markdown += "\nCreated Date: " + self._created_date.strftime(self.TIME_FORMAT) + "  "
+        self._markdown += "\nLast Update Date: " + self._updated_date.strftime(self.TIME_FORMAT) + "  "
         if len(self._attributes) > 0:
             for attr in self._attributes:
-                self._markdown += "\n>%s: %s  " % (attr[0], attr[1])
+                self._markdown += "\n%s: %s  " % (attr[0], attr[1])
+        self._markdown += "\n...\n"
 
     def create_markdown_note_tags(self):
-        self._markdown += "\n\n---"
-        self._markdown += "\n### TAGS\n"
-        tags = '  '.join(['{%s}' % tag for tag in self._tags])
+#        self._markdown += "\n\n---"
+        self._markdown += "\n# TAGS\n"
+        tags = '  '.join(['#%s' % tag for tag in self._tags])
         tags += "\n"
         self._markdown += tags
 
